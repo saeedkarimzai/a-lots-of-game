@@ -51,6 +51,8 @@ const countEl = document.querySelector('#resultCount');
 const bestScoreEl = document.querySelector('#bestScore');
 const modalTitle = document.querySelector('#modalTitle');
 
+let activeTimeout = null;
+let activeInterval = null;
 let filter = 'all';
 let query = '';
 const favorites = new Set(getStoredList(STORAGE_KEYS.favorites));
@@ -106,7 +108,7 @@ function renderGames() {
       <h3>${game.title}</h3>
       <p>${game.level} · ${game.difficulty} · GAME ${String(game.id).padStart(3, '0')}</p>
       <div class="card-bottom">
-        <span>✦ ARCADE 200</span>
+        <span>✦ ARCADE 300</span>
         <button class="play" data-play="${game.id}">PLAY ↗</button>
       </div>
     </article>
@@ -122,7 +124,7 @@ function openGame(game) {
 
   const startMarkup = `
     <div class="game-content">
-      <p class="game-instruction">${game.category.toUpperCase()} MODE · GAME ${game.id} OF 200</p>
+      <p class="game-instruction">${game.category.toUpperCase()} MODE · GAME ${game.id} OF 300</p>
   `;
 
   const endMarkup = `</div>`;
@@ -152,56 +154,63 @@ function openGame(game) {
 }
 
 function closeGame() {
+  clearTimeout(activeTimeout);
+  clearInterval(activeInterval);
+  activeTimeout = null;
+  activeInterval = null;
   modal.classList.add('hidden');
   stage.innerHTML = '';
 }
 
 function renderReactionGame(startMarkup, endMarkup) {
-  const html = `
-    ${startMarkup}
-    <p class="game-instruction">When the screen turns green, tap the button as fast as you can.</p>
+  const html = \`
+    \${startMarkup}
+    <p class="game-instruction">Press start, wait for green, then hit the same button as fast as possible.</p>
     <button class="action" id="reactionStart">Start reaction test</button>
     <div class="game-message" id="reactionMessage">Ready?</div>
-    ${endMarkup}
-  `;
-
+    \${endMarkup}
+  \`;
   stage.innerHTML = html;
-
-  const reactionMessage = document.getElementById('reactionMessage');
-  const reactionButton = document.getElementById('reactionStart');
-  let startTime = 0;
-  let allowTap = false;
-  let timeoutId = null;
-
-  const reset = () => {
-    allowTap = false;
-    clearTimeout(timeoutId);
-  };
-
-  reactionButton.addEventListener('click', () => {
-    reset();
-    reactionMessage.textContent = 'Wait for green…';
-    timeoutId = setTimeout(() => {
-      allowTap = true;
-      startTime = performance.now();
-      reactionMessage.textContent = 'TAP NOW!';
-    }, 1100 + Math.random() * 2200);
-  });
-
-  stage.addEventListener('click', (event) => {
-    if (event.target.id !== 'reactionStart' && event.target.id !== 'reactionMessage') return;
-    if (!allowTap) {
-      if (reactionMessage.textContent.includes('Wait')) {
-        reactionMessage.textContent = 'Too soon! Press start and wait.';
-      }
+  const message = document.getElementById('reactionMessage');
+  const button = document.getElementById('reactionStart');
+  let startedAt = 0;
+  let state = 'idle';
+  button.addEventListener('click', () => {
+    if (state === 'ready') {
+      const ms = Math.round(performance.now() - startedAt);
+      message.textContent = ms + ' ms — ' + (ms < 250 ? 'Lightning fast!' : ms < 500 ? 'Nice reflexes!' : 'Good effort!');
+      button.textContent = 'Try again';
+      state = 'done';
+      setBestScore(Math.max(100, 1000 - ms));
       return;
     }
-
-    const ms = Math.round(performance.now() - startTime);
-    reactionMessage.textContent = `${ms} ms — ${ms < 250 ? 'Lightning fast!' : ms < 500 ? 'Nice reflexes!' : 'Good effort!'}`;
-    setBestScore(Math.max(100, 1000 - ms));
-    allowTap = false;
-    clearTimeout(timeoutId);
+    if (state === 'waiting') {
+      clearTimeout(activeTimeout);
+      activeTimeout = null;
+      state = 'idle';
+      message.textContent = 'Too soon! Wait for green next time.';
+      button.textContent = 'Try again';
+      return;
+    }
+    state = 'waiting';
+    button.disabled = true;
+    button.textContent = 'Wait for green…';
+    message.textContent = 'Watch the button…';
+    activeTimeout = setTimeout(() => {
+      state = 'ready';
+      startedAt = performance.now();
+      button.disabled = false;
+      button.textContent = 'TAP NOW!';
+      message.textContent = 'GO GO GO!';
+      button.style.background = '#67e69a';
+    }, 1000 + Math.random() * 2500);
+  });
+  const resetButton = () => {
+    button.style.background = '';
+    button.disabled = false;
+  };
+  button.addEventListener('click', () => {
+    if (state === 'done' || state === 'idle') resetButton();
   });
 }
 
@@ -255,7 +264,7 @@ function renderMemoryGame(startMarkup, endMarkup) {
           openCards = [];
         } else {
           lockBoard = true;
-          setTimeout(() => {
+          activeTimeout = setTimeout(() => {
             hideTile(first.button);
             hideTile(second.button);
             openCards = [];
@@ -449,7 +458,7 @@ function renderTicTacToeGame(startMarkup, endMarkup) {
 
       currentPlayer = 'O';
       tttMessage.textContent = 'Bot is thinking...';
-      setTimeout(botMove, 420);
+      activeTimeout = setTimeout(botMove, 420);
     });
   });
 
@@ -481,6 +490,7 @@ function renderTargetTapGame(startMarkup, endMarkup) {
 
   const stopRound = () => {
     clearInterval(timerId);
+    activeInterval = null;
     tapTarget.disabled = true;
     tapBegin.disabled = false;
     setBestScore(score * 10);
@@ -509,6 +519,7 @@ function renderTargetTapGame(startMarkup, endMarkup) {
       }
       setMessage();
     }, 1000);
+    activeInterval = timerId;
   });
 }
 
