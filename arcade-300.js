@@ -22,16 +22,5 @@
     });
   }
 
-  // Update the mode total in each game's launch screen, including games opened at random.
-  const stage = document.querySelector('#stage');
-  if (stage) {
-    const observer = new MutationObserver(() => {
-      stage.querySelectorAll('.game-instruction').forEach((instruction) => {
-        instruction.textContent = instruction.textContent.replace(/OF 200\b/g, 'OF 300');
-      });
-    });
-    observer.observe(stage, { childList: true, subtree: true, characterData: true });
-  }
 
-  renderGames();
 })();
