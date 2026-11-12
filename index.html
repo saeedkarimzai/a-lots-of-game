@@ -28,9 +28,18 @@
       <div class="game-grid" id="grid" aria-live="polite"></div>
       <div class="empty hidden" id="empty">No games found. Try another search or category.</div>
     </section>
+    <section class="worlds-3d" id="3d-worlds" aria-labelledby="worlds-title">
+      <div class="section-heading"><div><span class="kicker">BLOCKY WORLDS · 3D-STYLE ARCADE</span><h2 id="worlds-title">Enter the <span>worlds</span></h2></div><span class="result-count">2 PLAYABLE WORLDS</span></div>
+      <p class="worlds-intro">Original block-style obstacle and coin-run games with a perspective 3D look. Jump in with your keyboard or touch controls.</p>
+      <div class="world-card-grid">
+        <article class="world-card"><div class="world-art obby-art"><span>⬢</span><i>◆</i><b>OBBY</b></div><div class="world-card-copy"><span class="world-tag">BLOCKY PLATFORMER</span><h3>Blocky Obby Rush</h3><p>Dodge chunky barriers, switch lanes, and jump your way through the neon course.</p><button class="button button-bright launch-world" data-world="obby">Play Obby Rush ↗</button></div></article>
+        <article class="world-card"><div class="world-art coin-art"><span>◉</span><i>✦</i><b>COIN RUN</b></div><div class="world-card-copy"><span class="world-tag">3D COIN RUNNER</span><h3>Blocky Coin Dash</h3><p>Race down a colorful block track, grab coins, and beat your high score.</p><button class="button button-bright launch-world" data-world="coins">Play Coin Dash ↗</button></div></article>
+      </div>
+    </section>
     <footer><span>✦ A LOTS OF GAME</span><span>MADE FOR THE LOVE OF PLAY</span></footer>
   </main>
   <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="backdrop" data-dismiss></div><section class="modal-card"><div class="modal-head"><div><span class="kicker">ARCADE MODE</span><h2 id="modalTitle">Game title</h2></div><button class="close" id="close" aria-label="Close game">×</button></div><div id="stage" class="stage"></div></section></div>
   <script src="script.js"></script>
+  <script src="worlds-3d.js"></script>
 </body>
 </html>
