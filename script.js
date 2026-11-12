@@ -56,7 +56,7 @@ let activeInterval = null;
 let filter = 'all';
 let query = '';
 const favorites = new Set(getStoredList(STORAGE_KEYS.favorites));
-let best = Number(localStorage.getItem(STORAGE_KEYS.best) || 0);
+let best = getStoredNumber(STORAGE_KEYS.best);
 
 function getStoredList(key) {
   try {
@@ -67,6 +67,15 @@ function getStoredList(key) {
   }
 }
 
+function getStoredNumber(key) {
+  try {
+    const value = Number(localStorage.getItem(key) || 0);
+    return Number.isFinite(value) ? value : 0;
+  } catch {
+    return 0;
+  }
+}
+
 function updateBestScore() {
   bestScoreEl.textContent = String(best);
 }
@@ -74,7 +83,11 @@ function updateBestScore() {
 function setBestScore(value) {
   if (value > best) {
     best = value;
-    localStorage.setItem(STORAGE_KEYS.best, String(best));
+    try {
+      localStorage.setItem(STORAGE_KEYS.best, String(best));
+    } catch (error) {
+      // Gameplay should continue even when browser storage is unavailable.
+    }
     updateBestScore();
   }
 }
@@ -574,7 +587,11 @@ grid.addEventListener('click', (event) => {
     } else {
       favorites.add(id);
     }
-    localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify([...favorites]));
+    try {
+      localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify([...favorites]));
+    } catch (error) {
+      // Favorites remain available for this page session.
+    }
     renderGames();
     return;
   }
