@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A LOTS OF GAME</title>
+    <meta
+      name="description"
+      content="A huge arcade collection with 200 mini-games, neon UI, and fast playable challenges."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">A</div>
+        <div>
+          <p class="eyebrow">Arcade Universe</p>
+          <h1>A LOTS OF GAME</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="ghost-btn" id="shuffleGames">Shuffle</button>
+        <button class="primary-btn" id="randomPlay">Random Play</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="badge">200 mini-games</span>
+          <h2>Play, chase scores, and unlock pure arcade energy.</h2>
+          <p>
+            Explore a neon gaming hub packed with reflex, puzzle, logic, memory,
+            and speed challenges. Every card is playable and designed to feel like
+            a mini arcade machine.
+          </p>
+          <div class="hero-stats">
+            <div>
+              <strong id="statsCount">200</strong>
+              <span>Games</span>
+            </div>
+            <div>
+              <strong>8</strong>
+              <span>Modes</span>
+            </div>
+            <div>
+              <strong>∞</strong>
+              <span>Fun</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <div class="panel-header">
+            <span class="dot green"></span>
+            <span class="dot yellow"></span>
+            <span class="dot red"></span>
+          </div>
+          <div class="score-box">
+            <p>Best combo</p>
+            <h3 id="comboScore">4200</h3>
+          </div>
+          <div class="mini-tiles">
+            <div>⚡ Speed</div>
+            <div>🧠 Brain</div>
+            <div>🎯 Aim</div>
+            <div>🎲 Fun</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <div class="search-wrap">
+          <span>🔎</span>
+          <input id="searchInput" type="text" placeholder="Search game title..." />
+        </div>
+        <div class="filter-row" id="filterRow">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="speed">Speed</button>
+          <button class="filter" data-filter="memory">Memory</button>
+          <button class="filter" data-filter="logic">Logic</button>
+          <button class="filter" data-filter="reaction">Reaction</button>
+          <button class="filter" data-filter="puzzle">Puzzle</button>
+        </div>
+      </section>
+
+      <section class="game-grid" id="gameGrid" aria-live="polite"></section>
+    </main>
+
+    <div class="modal hidden" id="gameModal" aria-modal="true" role="dialog">
+      <div class="modal-backdrop" data-close="true"></div>
+      <div class="modal-panel">
+        <div class="modal-top">
+          <div>
+            <p class="modal-kicker">Mini-game</p>
+            <h3 id="modalTitle">Game</h3>
+          </div>
+          <button class="close-btn" id="closeModal" aria-label="Close">✕</button>
+        </div>
+        <div id="gameStage" class="game-stage"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
