@@ -163,14 +163,10 @@ function closeGame() {
 }
 
 function renderReactionGame(startMarkup, endMarkup) {
-  const html = \`
-    \${startMarkup}
-    <p class="game-instruction">Press start, wait for green, then hit the same button as fast as possible.</p>
-    <button class="action" id="reactionStart">Start reaction test</button>
-    <div class="game-message" id="reactionMessage">Ready?</div>
-    \${endMarkup}
-  \`;
-  stage.innerHTML = html;
+  stage.innerHTML = startMarkup +
+    '<p class="game-instruction">Press start, wait for green, then hit the same button as fast as possible.</p>' +
+    '<button class="action" id="reactionStart">Start reaction test</button>' +
+    '<div class="game-message" id="reactionMessage">Ready?</div>' + endMarkup;
   const message = document.getElementById('reactionMessage');
   const button = document.getElementById('reactionStart');
   let startedAt = 0;
@@ -180,6 +176,7 @@ function renderReactionGame(startMarkup, endMarkup) {
       const ms = Math.round(performance.now() - startedAt);
       message.textContent = ms + ' ms — ' + (ms < 250 ? 'Lightning fast!' : ms < 500 ? 'Nice reflexes!' : 'Good effort!');
       button.textContent = 'Try again';
+      button.style.background = '';
       state = 'done';
       setBestScore(Math.max(100, 1000 - ms));
       return;
@@ -190,27 +187,20 @@ function renderReactionGame(startMarkup, endMarkup) {
       state = 'idle';
       message.textContent = 'Too soon! Wait for green next time.';
       button.textContent = 'Try again';
+      button.style.background = '';
       return;
     }
     state = 'waiting';
-    button.disabled = true;
     button.textContent = 'Wait for green…';
     message.textContent = 'Watch the button…';
+    button.style.background = '';
     activeTimeout = setTimeout(() => {
       state = 'ready';
       startedAt = performance.now();
-      button.disabled = false;
       button.textContent = 'TAP NOW!';
       message.textContent = 'GO GO GO!';
       button.style.background = '#67e69a';
     }, 1000 + Math.random() * 2500);
-  });
-  const resetButton = () => {
-    button.style.background = '';
-    button.disabled = false;
-  };
-  button.addEventListener('click', () => {
-    if (state === 'done' || state === 'idle') resetButton();
   });
 }
 
