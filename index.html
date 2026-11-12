@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090b18">
-  <meta name="description" content="200 bite-sized arcade challenges. Pick a game, beat your best, and keep the streak alive.">
-  <title>Arcade 200 — A Lots of Game</title>
+  <meta name="description" content="300 bite-sized arcade challenges plus original blocky 3D-style worlds. Pick a game, beat your best, and keep the streak alive.">
+  <title>Arcade 300 — A Lots of Game</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -14,16 +14,16 @@
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar wrap">
-    <a class="brand" href="#top" aria-label="Arcade 200 home"><span class="brand-icon">✦</span><span>A LOTS <b>OF GAME</b></span></a>
+    <a class="brand" href="#top" aria-label="Arcade 300 home"><span class="brand-icon">✦</span><span>A LOTS <b>OF GAME</b></span></a>
     <div class="header-right"><span class="online"><i></i> ARCADE ONLINE</span><button class="button button-soft" id="shuffle">↻ Shuffle</button><button class="button button-bright" id="random">▶ Random game</button></div>
   </header>
   <main class="wrap" id="top">
     <section class="hero">
-      <div class="hero-copy"><span class="kicker">THE MINI-GAME UNIVERSE</span><h1>One more game.<br><span>Always.</span></h1><p>Jump into quick arcade challenges, chase your personal best, and find your next favorite from a universe of 200 games.</p><div class="hero-actions"><button class="button button-bright" id="browse">Explore the games <span>↓</span></button><span class="hero-note">No downloads. Just play.</span></div><div class="stats"><div><b>200</b><span>GAMES</span></div><div><b>6</b><span>ARCADE MODES</span></div><div><b id="bestScore">0</b><span>YOUR BEST</span></div></div></div>
+      <div class="hero-copy"><span class="kicker">THE MINI-GAME UNIVERSE</span><h1>One more game.<br><span>Always.</span></h1><p>Jump into quick arcade challenges, chase your personal best, and find your next favorite from a universe of 300 games.</p><div class="hero-actions"><button class="button button-bright" id="browse">Explore the games <span>↓</span></button><span class="hero-note">No downloads. Just play.</span></div><div class="stats"><div><b>300</b><span>GAMES</span></div><div><b>6</b><span>ARCADE MODES</span></div><div><b id="bestScore">0</b><span>YOUR BEST</span></div></div></div>
       <div class="hero-art" aria-label="Arcade game preview"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-core">✦</div><div class="float-chip chip-a">⚡ SPEED</div><div class="float-chip chip-b">◎ FOCUS</div><div class="float-chip chip-c">✧ PLAY</div><div class="art-caption"><span>PLAYER 01</span><b>READY WHEN YOU ARE</b></div></div>
     </section>
     <section class="catalog" id="games">
-      <div class="section-heading"><div><span class="kicker">PICK YOUR CHALLENGE</span><h2>The arcade <span>floor</span></h2></div><span class="result-count" id="resultCount">200 GAMES</span></div>
+      <div class="section-heading"><div><span class="kicker">PICK YOUR CHALLENGE</span><h2>The arcade <span>floor</span></h2></div><span class="result-count" id="resultCount">300 GAMES</span></div>
       <div class="controls"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Find your next obsession…" autocomplete="off"></label><div class="filters" id="filters"><button class="filter active" data-filter="all">All games</button><button class="filter" data-filter="speed">⚡ Speed</button><button class="filter" data-filter="memory">◉ Memory</button><button class="filter" data-filter="logic">◇ Logic</button><button class="filter" data-filter="focus">◎ Focus</button><button class="filter" data-filter="puzzle">▦ Puzzle</button><button class="filter" data-filter="favorites">♥ Saved</button></div></div>
       <div class="game-grid" id="grid" aria-live="polite"></div>
       <div class="empty hidden" id="empty">No games found. Try another search or category.</div>
@@ -40,6 +40,7 @@
   </main>
   <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="backdrop" data-dismiss></div><section class="modal-card"><div class="modal-head"><div><span class="kicker">ARCADE MODE</span><h2 id="modalTitle">Game title</h2></div><button class="close" id="close" aria-label="Close game">×</button></div><div id="stage" class="stage"></div></section></div>
   <script src="script.js"></script>
+  <script src="arcade-300.js"></script>
   <script src="worlds-3d.js"></script>
 </body>
 </html>
