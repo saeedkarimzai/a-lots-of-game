@@ -1,95 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>A LOTS OF GAMES</title>
-<style>
-:root{color-scheme:dark;--bg:#090b13;--panel:#121727;--panel2:#1a2235;--line:#29334b;--text:#f3f5ff;--muted:#9ba8c3;--a:#9b7cff;--b:#43d9c5}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0,#242044 0,transparent 40%),var(--bg);color:var(--text);font:15px/1.45 system-ui,Segoe UI,sans-serif}
-header{padding:28px max(20px,calc((100% - 1300px)/2));border-bottom:1px solid var(--line);background:#0b0e19dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(16px)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{font-size:clamp(24px,4vw,38px);font-weight:950;letter-spacing:-1.8px}.brand span{color:var(--a)}.sub{color:var(--muted);margin-top:3px}.count{border:1px solid #554b80;background:#211b3b;padding:8px 13px;border-radius:999px;font-weight:800}
-main{max-width:1300px;margin:auto;padding:24px 20px 70px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 20px}input,select,button{font:inherit;color:inherit}input,select{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}input{flex:1;min-width:210px}input:focus,select:focus{border-color:var(--a)}button{border:0;border-radius:12px;padding:11px 15px;background:var(--panel2);cursor:pointer;font-weight:750}button:hover{filter:brightness(1.2)}button.primary{background:linear-gradient(135deg,#8865fa,#5b55cf)}button:focus-visible{outline:2px solid var(--b);outline-offset:3px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:13px}.card{background:linear-gradient(145deg,#171e30,#101522);border:1px solid var(--line);border-radius:17px;padding:16px;text-align:left;min-height:142px;display:flex;flex-direction:column;gap:8px;transition:.15s}.card:hover{transform:translateY(-3px);border-color:#7663c8}.icon{font-size:25px}.card strong{font-size:16px}.card small{color:var(--muted);margin-top:auto}.tag{font-size:11px;color:#c5b8ff;text-transform:uppercase;letter-spacing:1px;font-weight:850}
-#gameShell{display:none;background:#101626;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:22px}.gameHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.gameHead h2{margin:0;font-size:22px}.stats{display:flex;gap:8px;flex-wrap:wrap}.stat{background:#202a40;border-radius:10px;padding:7px 11px;color:#dfe6ff}.stat b{color:white}.stage{position:relative;max-width:100%;margin:auto;overflow:hidden;border-radius:14px;background:#080d19;touch-action:none}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#070b16c9;text-align:center;padding:20px}.overlay[hidden]{display:none}.modal{max-width:460px}.modal h3{font-size:30px;margin:0 0 8px}.modal p{color:#c0cbe2}.controls{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:13px}.empty{color:var(--muted);padding:30px;text-align:center;grid-column:1/-1}
-@media(max-width:600px){header{position:static}.card{min-height:125px}main{padding:18px 12px 50px}#gameShell{padding:10px}}
-</style></head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b18">
+  <meta name="description" content="200 bite-sized arcade challenges. Pick a game, beat your best, and keep the streak alive.">
+  <title>Arcade 200 — A Lots of Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<header><div class="top"><div><div class="brand">A LOTS OF <span>GAMES</span></div><div class="sub">100 mini-games. One browser tab. No downloads.</div></div><div class="count">🎮 100 GAMES</div></div></header>
-<main>
-<section id="gameShell">
- <div class="gameHead"><div><div class="tag" id="gameCategory">ARCADE</div><h2 id="gameTitle">Game</h2></div><div class="stats"><div class="stat">Score <b id="score">0</b></div><div class="stat">Best <b id="best">0</b></div><div class="stat">Goal <b id="goal">10</b></div></div></div>
- <div class="stage"><canvas id="board" width="960" height="540" aria-label="Game play area"></canvas><div class="overlay" id="overlay"><div class="modal"><h3 id="overlayTitle">Ready?</h3><p id="overlayText">Press start to play.</p><button class="primary" id="startBtn">▶ Start game</button></div></div></div>
- <div class="controls"><span id="help">Move with WASD / arrow keys. Touch and drag on mobile.</span><div><button id="restartBtn">↻ Restart</button> <button id="backBtn">← All games</button></div></div>
-</section>
-<div class="toolbar"><input id="search" type="search" placeholder="Search 100 games..." aria-label="Search games"><select id="filter" aria-label="Filter category"><option value="all">All categories</option><option>Runner</option><option>Snake</option><option>Memory</option><option>Reaction</option><option>Math</option><option>Dodge</option><option>Collector</option><option>Shooter</option><option>Pong</option><option>Breakout</option></select><button id="shuffle">🔀 Shuffle</button></div>
-<div class="grid" id="grid"></div>
-</main>
-<script>
-const groups=[
-["Runner","🏃",["Neon Dash","Rooftop Rush","Jungle Sprint","Cyber Runner","Desert Escape","Frost Run","Lava Leap","Metro Runner","Moon Hop","Turbo Track"]],
-["Snake","🐍",["Classic Snake","Neon Serpent","Tiny Snake","Speed Snake","Pixel Python","Gem Eater","Grid Crawler","Snake XL","Rainbow Snake","Turbo Serpent"]],
-["Memory","🧠",["Memory Match","Emoji Pairs","Space Pairs","Color Recall","Animal Match","Fruit Flip","Shape Shuffle","Gem Memory","Pixel Pairs","Brain Trainer"]],
-["Reaction","⚡",["Quick Click","Target Tap","Blink Test","Color Reflex","Pop Frenzy","Star Snatcher","Speed Tap","Flash Finder","Tiny Targets","Rapid Fire"]],
-["Math","➗",["Math Sprint","Number Ninja","Quick Addition","Times Table","Subtraction Dash","Division Drill","Number Rush","Brain Blitz","Equation Race","Math Master"]],
-["Dodge","💨",["Meteor Dodge","Laser Escape","Bomb Bounce","Asteroid Alley","Falling Blocks","Storm Dodger","Comet Run","Hazard Zone","Orbital Drift","Chaos Dodge"]],
-["Collector","💎",["Coin Collector","Gem Garden","Star Grabber","Treasure Hunt","Candy Catch","Crystal Quest","Golden Dash","Bubble Collector","Lucky Loot","Jewel Jumper"]],
-["Shooter","🚀",["Space Defender","Alien Attack","Meteor Blaster","Star Patrol","Pixel Pilot","Cosmic Strike","Astro Guard","Galaxy Raid","Laser Squad","Void Hunter"]],
-["Pong","🏓",["Pong Classic","Neon Pong","Speed Rally","Angle Ace","Tiny Tennis","Cyber Paddle","Wall Bounce","Pong Storm","Retro Rally","Paddle Pro"]],
-["Breakout","🧱",["Brick Breaker","Neon Breakout","Block Buster","Brick Storm","Pixel Smash","Crystal Breaker","Wall Crusher","Turbo Bricks","Color Crash","Mega Breaker"]]
-];
-const games=groups.flatMap(([category,icon,names],g)=>names.map((name,i)=>({id:g*10+i,name,category,icon,variant:i,speed:1+i*.075,goal: g===2?6+i%4:g===3?12+i*2:g===4?10+i*2:12+i*2})));
-const $=id=>document.getElementById(id),grid=$("grid"),canvas=$("board"),ctx=canvas.getContext("2d"),W=960,H=540;
-let current=null,raf=0,last=0,score=0,best=0,active=false,over=false,keys={},pointer={x:W/2,y:H-55,down:false},s={};
-const colors=["#a78bfa","#42dfcb","#ffca69","#ff729c","#70a7ff","#b5ed75"];
-function render(list=games){grid.innerHTML="";if(!list.length){grid.innerHTML='<div class="empty">No games found. Your search skills need a patch.</div>';return}list.forEach(g=>{const b=document.createElement("button");b.className="card";b.innerHTML='<span class="icon">'+g.icon+'</span><strong>'+g.name+'</strong><span class="tag">'+g.category+'</span><small>Play now · Game '+(g.id+1)+'</small>';b.addEventListener("click",()=>openGame(g));grid.appendChild(b)})}
-function bestKey(g){return "alg-best-"+g.id}
-function openGame(g){current=g;score=0;best=Number(localStorage.getItem(bestKey(g))||0);$("gameShell").style.display="block";$("gameTitle").textContent=g.name;$("gameCategory").textContent=g.category;$("score").textContent=0;$("best").textContent=best;$("goal").textContent=g.goal;$("help").textContent=helpText(g.category);resetState();showOverlay("Ready to play?",intro(g),"▶ Start game");$("gameShell").scrollIntoView({behavior:"smooth",block:"start"})}
-function helpText(c){return ({Runner:"Space / ↑ to jump. Avoid the obstacles.",Snake:"Arrow keys or WASD to steer. Eat the glowing dots.",Memory:"Tap two cards to find matching pairs.",Reaction:"Click or tap the target as quickly as possible.",Math:"Solve the equation using the number buttons or keyboard.",Dodge:"Move with arrows / WASD. Don't get hit.",Collector:"Move around and collect the glowing gems. Avoid hazards.",Shooter:"Move with arrows / WASD. Hold Space or tap to fire.",Pong:"Move your paddle with mouse, touch, or arrow keys.",Breakout:"Move the paddle. Bounce the ball into every brick."})[c]}
-function intro(g){return ({Runner:"Jump over obstacles and survive long enough to reach the goal.",Snake:"Eat the glowing food. Don't hit the walls or your own tail.",Memory:"Flip cards and find every matching pair.",Reaction:"Hit the targets before the timer runs out.",Math:"Answer as many quick equations as you can.",Dodge:"Stay alive while hazards rain down.",Collector:"Grab the gems and dodge the bombs.",Shooter:"Blast the incoming enemies before they reach you.",Pong:"Keep the ball in play and outscore the CPU.",Breakout:"Clear the bricks with your bouncing ball."})[g.category]}
-function showOverlay(title,msg,btn){$("overlayTitle").textContent=title;$("overlayText").textContent=msg;$("startBtn").textContent=btn;$("overlay").hidden=false}
-function resetState(){cancelAnimationFrame(raf);active=false;over=false;keys={};s={t:0,player:{x:W/2,y:H-90,vx:0,vy:0},items:[],particles:[],ball:{x:W/2,y:H/2,vx:4,vy:4},paddle:W/2,bricks:[],snake:[{x:12,y:10},{x:11,y:10},{x:10,y:10}],dir:{x:1,y:0},lastTurn:0,food:{x:20,y:10},cards:[],flipped:[],matched:[],timer:35,question:null,answer:"",hits:0,lives:3,spawn:0,level:1,jump:false};if(current?.category==="Breakout"){for(let y=0;y<5;y++)for(let x=0;x<11;x++)s.bricks.push({x:95+x*70,y:65+y*35,on:true,c:colors[(x+y+current.variant)%colors.length]})}if(current?.category==="Memory"){let vals=Array.from({length:8},(_,i)=>i).flatMap(i=>[i,i]);s.cards=vals.sort(()=>Math.random()-.5)}if(current?.category==="Snake")placeFood();if(current?.category==="Reaction")newTarget();if(current?.category==="Math")newQuestion();draw()}
-function placeFood(){s.food={x:2+Math.floor(Math.random()*26),y:2+Math.floor(Math.random()*14)}}
-function newTarget(){s.target={x:90+Math.random()*780,y:80+Math.random()*370,r:25+Math.random()*13};s.spawn++}
-function newQuestion(){let a=1+Math.floor(Math.random()*(8+current.variant*2)),b=1+Math.floor(Math.random()*(8+current.variant*2)),op=["+","−","×"][current.variant%3];s.question={a,b,op,answer:op==="+"?a+b:op==="−"?a-b:a*b};s.answer=""}
-function start(){if(!current)return;resetState();$("overlay").hidden=true;active=true;last=performance.now();raf=requestAnimationFrame(loop)}
-function end(win,msg){active=false;over=true;cancelAnimationFrame(raf);if(score>best){best=score;localStorage.setItem(bestKey(current),best)}$("score").textContent=score;$("best").textContent=best;showOverlay(win?"🏆 You win!":"Game over",msg||("Final score: "+score),"↻ Play again")}
-function add(n=1){score+=n;$("score").textContent=score;if(score>best){best=score;$("best").textContent=best}}
-function loop(now){if(!active)return;let dt=Math.min((now-last)/16.67,2);last=now;s.t+=dt;update(dt);draw();if(active)raf=requestAnimationFrame(loop)}
-function movePlayer(dt){let p=s.player,spd=5.2*current.speed,dx=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0),dy=(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0);if(pointer.down&&["Collector","Dodge","Shooter"].includes(current.category)){dx=Math.sign(pointer.x-p.x);dy=Math.sign(pointer.y-p.y)}p.x=Math.max(22,Math.min(W-22,p.x+dx*spd*dt));p.y=Math.max(55,Math.min(H-22,p.y+dy*spd*dt))}
-function spawnItem(kind="bad"){s.items.push({x:25+Math.random()*(W-50),y:-25,r:12+Math.random()*9,vy:(2.2+Math.random()*2.2)*current.speed,kind})}
-function update(dt){let c=current.category,p=s.player;
-if(c==="Runner"){s.spawn+=dt;if((keys[" "]||keys.ArrowUp||keys.w)&&!p.jump){p.vy=-13;p.jump=true}p.vy+=.62*dt;p.y+=p.vy*dt;if(p.y>H-100){p.y=H-100;p.vy=0;p.jump=false}if(s.spawn>Math.max(22,65-current.variant*2)){s.spawn=0;s.items.push({x:W+30,y:H-78,w:28+Math.random()*25,h:30+Math.random()*35,vy:-(6+current.variant*.18)})}s.items.forEach(o=>o.x+=o.vy*dt);s.items=s.items.filter(o=>o.x>-80);for(let o of s.items)if(Math.abs(o.x-p.x)<25+o.w/2&&Math.abs(o.y-o.h/2-p.y)<35){end(false,"You hit an obstacle. Try jumping later.");return}if(Math.floor(s.t/8)>score)add(1);if(score>=current.goal)end(true,"You made it through the course!")}
-if(c==="Snake"){if(s.t-s.lastTurn>8){let d={x:(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0),y:(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0)};if(d.x||d.y){if(!(d.x===-s.dir.x&&d.y===-s.dir.y))s.dir=d;s.lastTurn=s.t}let h={x:s.snake[0].x+s.dir.x,y:s.snake[0].y+s.dir.y};if(h.x<0||h.x>=30||h.y<0||h.y>=17||s.snake.some((q,i)=>i>0&&q.x===h.x&&q.y===h.y)){end(false,"Your snake crashed. Score: "+score);return}s.snake.unshift(h);if(h.x===s.food.x&&h.y===s.food.y){add(1);placeFood()}else s.snake.pop()}if(score>=current.goal)end(true,"Your snake is unstoppable.")}
-if(c==="Dodge"||c==="Collector"||c==="Shooter"){movePlayer(dt);s.spawn+=dt;if(s.spawn>Math.max(9,28-current.variant*1.5)){s.spawn=0;if(c==="Collector"){spawnItem("good");if(Math.random()<.45)spawnItem("bad")}else if(c==="Shooter"){if(Math.random()<.8)spawnItem("enemy")}else spawnItem("bad")}for(let o of s.items)o.y+=o.vy*dt;s.items=s.items.filter(o=>o.y<H+40);if(c==="Shooter"){if((keys[" "]||pointer.down)&&s.t-(s.lastShot||0)>.18){s.lastShot=s.t;s.items.push({x:p.x,y:p.y-20,r:5,vy:-10,kind:"shot"})}for(let o of s.items){if(o.kind==="shot"){for(let e of s.items)if(e.kind==="enemy"&&Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r){e.dead=true;o.dead=true;add(1)}}else if(o.kind==="enemy"&&Math.hypot(o.x-p.x,o.y-p.y)<o.r+16){end(false,"An enemy got through your shields.");return}}s.items=s.items.filter(o=>!o.dead);if(score>=current.goal)end(true,"Sector cleared!")}else for(let o of s.items){let hit=Math.hypot(o.x-p.x,o.y-p.y)<o.r+15;if(hit){if(c==="Collector"&&o.kind==="good"){o.dead=true;add(1)}else{end(false,c==="Collector"?"You touched a bomb!":"A hazard caught you.");return}}}s.items=s.items.filter(o=>!o.dead);if(c==="Dodge"&&Math.floor(s.t/5)>score)add(1);if(score>=current.goal)end(true,c==="Collector"?"All gems collected!":"You survived the hazard field.")}
-if(c==="Pong"){s.paddle=pointer.down?pointer.x:Math.max(70,Math.min(W-70,s.paddle+(((keys.ArrowRight||keys.d)?1:0)-((keys.ArrowLeft||keys.a)?1:0))*8*dt));let b=s.ball;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<15||b.x>W-15)b.vx*=-1;if(b.y<15)b.vy=Math.abs(b.vy);if(b.y>H-70&&b.y<H-35&&Math.abs(b.x-s.paddle)<82&&b.vy>0){b.vy=-Math.abs(b.vy)*1.04;b.vx+=(b.x-s.paddle)*.035;add(1)}if(b.y>H+20){end(false,"The ball got past your paddle.");return}let ai=W/2+Math.sin(s.t*.7)*110;b.vx+=(Math.sign(ai-b.x)*.015*current.speed);if(score>=current.goal)end(true,"Rally champion!")}
-if(c==="Breakout"){s.paddle=pointer.down?pointer.x:Math.max(65,Math.min(W-65,s.paddle+(((keys.ArrowRight||keys.d)?1:0)-((keys.ArrowLeft||keys.a)?1:0))*9*dt));let b=s.ball;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<12||b.x>W-12)b.vx*=-1;if(b.y<12)b.vy=Math.abs(b.vy);if(b.y>H-65&&b.y<H-35&&Math.abs(b.x-s.paddle)<78&&b.vy>0){b.vy=-Math.abs(b.vy);b.vx+=(b.x-s.paddle)*.04}if(b.y>H+20){end(false,"You missed the ball.");return}for(let r of s.bricks)if(r.on&&b.x>r.x&&b.x<r.x+58&&b.y>r.y&&b.y<r.y+22){r.on=false;b.vy*=-1;add(1);break}if(s.bricks.every(r=>!r.on))end(true,"Every brick smashed!")}
-if(c==="Memory"){if(s.matched.length===16){end(true,"Perfect memory!");return}}
-if(c==="Reaction"){s.timer-=dt/60;if(s.timer<=0){end(false,"Time ran out. Targets hit: "+score);return}if(score>=current.goal)end(true,"Lightning-fast reflexes!")}
-if(c==="Math"){s.timer-=dt/60;if(s.timer<=0){end(false,"Time's up. Correct answers: "+score);return}}
-}
-function draw(){ctx.clearRect(0,0,W,H);let grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,"#111a31");grad.addColorStop(1,"#080d18");ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);ctx.strokeStyle="#ffffff0b";ctx.lineWidth=1;for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
-let c=current?.category,p=s.player;if(!c)return;
-if(c==="Runner"){rect(0,H-58,W,58,"#26344c");rect(p.x-20,p.y-38,40,40,"#9d82ff");s.items.forEach(o=>rect(o.x,o.y-o.h,o.w,o.h,"#ff719c"));text("SPACE / ↑ TO JUMP",30,42,17,"#9eabc7")}
-if(c==="Snake"){s.snake.forEach((q,i)=>rect(q.x*32+1,q.y*32+1,29,29,i?"#42bfae":"#a78bfa"));circle(s.food.x*32+16,s.food.y*32+16,12,"#ffca69")}
-if(["Dodge","Collector","Shooter"].includes(c)){s.items.forEach(o=>circle(o.x,o.y,o.r,o.kind==="good"?"#42dfcb":o.kind==="shot"?"#fff":o.kind==="enemy"?"#ff729c":"#ffca69"));if(c==="Shooter"){triangle(p.x,p.y-23,p.x-18,p.y+17,p.x+18,p.y+17,"#9b85ff")}else circle(p.x,p.y,17,c==="Collector"?"#42dfcb":"#a78bfa")}
-if(c==="Pong"||c==="Breakout"){rect(s.paddle-70,H-52,140,14,"#a78bfa",8);circle(s.ball.x,s.ball.y,10,"#f7f7ff");if(c==="Breakout")s.bricks.forEach(r=>{if(r.on)rect(r.x,r.y,58,22,r.c,5)})}
-if(c==="Memory"){s.cards.forEach((v,i)=>{let x=190+(i%4)*150,y=45+Math.floor(i/4)*115,show=s.flipped.includes(i)||s.matched.includes(i);rect(x,y,125,92,show?"#3d3a67":"#242f49",12);text(show?["🍒","⭐","🐸","🚀","🍉","🎲","💎","🐱"][v]:"?",x+62,y+61,show?34:40,"#fff","center")})}
-if(c==="Reaction"){if(s.target){circle(s.target.x,s.target.y,s.target.r,"#9b85ff");circle(s.target.x,s.target.y,s.target.r*.55,"#42dfcb");circle(s.target.x,s.target.y,s.target.r*.2,"#fff")}text("TIME "+Math.max(0,Math.ceil(s.timer)),W-30,40,20,"#fff","right")}
-if(c==="Math"){rect(250,125,460,230,"#202b44",20);text(s.question.a+" "+s.question.op+" "+s.question.b+" = ?",W/2,220,50,"#fff","center");text(s.answer||"Type your answer",W/2,290,25,"#42dfcb","center");text("ENTER TO SUBMIT",W/2,325,15,"#9eabc7","center");text("TIME "+Math.ceil(s.timer),W-30,40,20,"#fff","right")}
-text("SCORE  "+score,25,H-20,15,"#dce5ff")
-}
-function rect(x,y,w,h,color,r=0){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-function circle(x,y,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
-function text(t,x,y,size,color,align="left"){ctx.fillStyle=color;ctx.font="800 "+size+"px system-ui";ctx.textAlign=align;ctx.fillText(t,x,y)}
-function triangle(x,y,x1,y1,x2,y2,color){ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x1,y1);ctx.lineTo(x2,y2);ctx.closePath();ctx.fill()}
-function memoryTap(x,y){if(!active||current.category!=="Memory")return;let col=Math.floor((x-190)/150),row=Math.floor((y-45)/115),i=row*4+col;if(col<0||col>3||row<0||row>3||s.matched.includes(i)||s.flipped.includes(i)||s.flipped.length>=2)return;s.flipped.push(i);if(s.flipped.length===2){if(s.cards[s.flipped[0]]===s.cards[s.flipped[1]]){s.matched.push(...s.flipped);s.flipped=[];add(1)}else setTimeout(()=>{s.flipped=[];draw()},650)}draw()}
-canvas.addEventListener("pointerdown",e=>{let r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;pointer={x,y,down:true};if(current?.category==="Memory")memoryTap(x,y);if(current?.category==="Reaction"&&active&&s.target&&Math.hypot(x-s.target.x,y-s.target.y)<s.target.r){add(1);newTarget()}if(current?.category==="Math"&&active){let n=Math.round(x/ W*10);if(y>365&&y<520){if(n===9){s.answer=s.answer.slice(0,-1)}else s.answer+=String(n);draw()}}});
-canvas.addEventListener("pointermove",e=>{let r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)*W/r.width;pointer.y=(e.clientY-r.top)*H/r.height});
-window.addEventListener("pointerup",()=>pointer.down=false);
-window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();keys[e.key]=true;if(current?.category==="Math"&&active){if(/^[0-9]$/.test(e.key))s.answer+=e.key;if(e.key==="Backspace")s.answer=s.answer.slice(0,-1);if(e.key==="Enter"){if(Number(s.answer)===s.question.answer){add(1);newQuestion()}else{s.answer="";s.timer-=.07}}draw()}});
-window.addEventListener("keyup",e=>keys[e.key]=false);
-$("startBtn").onclick=start;$("restartBtn").onclick=()=>current&&openGame(current);$("backBtn").onclick=()=>{$("gameShell").style.display="none";cancelAnimationFrame(raf);active=false;grid.scrollIntoView({behavior:"smooth"})};
-$("search").addEventListener("input",filter);$("filter").addEventListener("change",filter);function filter(){let q=$("search").value.toLowerCase(),cat=$("filter").value;render(games.filter(g=>(cat==="all"||g.category===cat)&&g.name.toLowerCase().includes(q)))}
-$("shuffle").onclick=()=>render([...games].sort(()=>Math.random()-.5));
-render();
-</script></body></html>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar wrap">
+    <a class="brand" href="#top" aria-label="Arcade 200 home"><span class="brand-icon">✦</span><span>A LOTS <b>OF GAME</b></span></a>
+    <div class="header-right"><span class="online"><i></i> ARCADE ONLINE</span><button class="button button-soft" id="shuffle">↻ Shuffle</button><button class="button button-bright" id="random">▶ Random game</button></div>
+  </header>
+  <main class="wrap" id="top">
+    <section class="hero">
+      <div class="hero-copy"><span class="kicker">THE MINI-GAME UNIVERSE</span><h1>One more game.<br><span>Always.</span></h1><p>Jump into quick arcade challenges, chase your personal best, and find your next favorite from a universe of 200 games.</p><div class="hero-actions"><button class="button button-bright" id="browse">Explore the games <span>↓</span></button><span class="hero-note">No downloads. Just play.</span></div><div class="stats"><div><b>200</b><span>GAMES</span></div><div><b>6</b><span>ARCADE MODES</span></div><div><b id="bestScore">0</b><span>YOUR BEST</span></div></div></div>
+      <div class="hero-art" aria-label="Arcade game preview"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-core">✦</div><div class="float-chip chip-a">⚡ SPEED</div><div class="float-chip chip-b">◎ FOCUS</div><div class="float-chip chip-c">✧ PLAY</div><div class="art-caption"><span>PLAYER 01</span><b>READY WHEN YOU ARE</b></div></div>
+    </section>
+    <section class="catalog" id="games">
+      <div class="section-heading"><div><span class="kicker">PICK YOUR CHALLENGE</span><h2>The arcade <span>floor</span></h2></div><span class="result-count" id="resultCount">200 GAMES</span></div>
+      <div class="controls"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Find your next obsession…" autocomplete="off"></label><div class="filters" id="filters"><button class="filter active" data-filter="all">All games</button><button class="filter" data-filter="speed">⚡ Speed</button><button class="filter" data-filter="memory">◉ Memory</button><button class="filter" data-filter="logic">◇ Logic</button><button class="filter" data-filter="focus">◎ Focus</button><button class="filter" data-filter="puzzle">▦ Puzzle</button><button class="filter" data-filter="favorites">♥ Saved</button></div></div>
+      <div class="game-grid" id="grid" aria-live="polite"></div>
+      <div class="empty hidden" id="empty">No games found. Try another search or category.</div>
+    </section>
+    <footer><span>✦ A LOTS OF GAME</span><span>MADE FOR THE LOVE OF PLAY</span></footer>
+  </main>
+  <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="backdrop" data-dismiss></div><section class="modal-card"><div class="modal-head"><div><span class="kicker">ARCADE MODE</span><h2 id="modalTitle">Game title</h2></div><button class="close" id="close" aria-label="Close game">×</button></div><div id="stage" class="stage"></div></section></div>
+  <script src="script.js"></script>
+</body>
+</html>

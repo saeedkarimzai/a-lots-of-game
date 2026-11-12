@@ -1,18 +1,23 @@
-# A Lots of Games
+# A LOTS OF GAME — Arcade 200
 
-A browser-based arcade with **100 playable mini-games** in one responsive page.
+A responsive browser arcade with a neon-inspired interface, 200 game cards, search and category filters, saved favorites, shuffle/random play, and six playable arcade modes.
 
-## Play
-Open the GitHub Pages site after enabling Pages for the `main` branch and `/(root)`, or open `index.html` directly in a modern browser.
+## Run it
 
-## What's included
-- 10 game styles with 10 variations each: runners, snake, memory, reaction, math, dodge, collectors, shooters, pong, and breakout.
-- Search, category filters, and shuffle.
-- Keyboard controls plus pointer/touch support where applicable.
-- Local high scores saved in the browser with localStorage.
-- No build step, package install, account, or API key required.
+Open `index.html` in a modern browser. No build tools or dependencies are required. The Google Fonts link is optional; the page falls back to system fonts if offline.
 
-## Controls
-Use WASD or arrow keys for movement, Space to jump/fire, click/tap targets, and use the on-screen game controls. Each game displays its own instructions.
+## Features
 
-All games run locally in the browser. Scores are saved on the device/browser where you play.
+- 200 catalog entries across speed, memory, logic, focus, and puzzle categories
+- Playable reaction test, memory match, number guess, typing sprint, tic-tac-toe vs. bot, and target tap
+- Search, category filters, saved games, shuffle, and random play
+- Personal best and favorites saved in browser local storage
+- Responsive layout for desktop and mobile
+
+## Files
+
+- `index.html` — arcade page and game dialog
+- `style.css` — responsive visual design
+- `script.js` — game catalog, UI, and mini-game logic
+
+For local development, serve this folder with any static file server, for example `python -m http.server 8000`, then open `http://localhost:8000`.
