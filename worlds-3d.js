@@ -28,6 +28,21 @@
   let jumpY = 0, jumpVelocity = 0, distance = 0, spawnClock = 0;
   const laneX = [-2.4, 0, 2.4];
   const bestKey = type => 'a-lots-3d-best-' + type;
+  function readBest(type) {
+    try {
+      const value = Number(localStorage.getItem(bestKey(type)) || 0);
+      return Number.isFinite(value) ? value : 0;
+    } catch (error) {
+      return 0;
+    }
+  }
+  function writeBest(type, value) {
+    try {
+      localStorage.setItem(bestKey(type), String(value));
+    } catch (error) {
+      // High scores are optional; the game must remain playable without storage.
+    }
+  }
 
   function mat(color, roughness, metalness) {
     return new THREE.MeshStandardMaterial({ color: color, roughness: roughness === undefined ? 0.7 : roughness, metalness: metalness || 0.05 });
@@ -157,11 +172,11 @@
     running = false;
     const points = (worldType === 'coins' || worldType === 'crystals' || worldType === 'sky') ? coins * 100 + Math.floor(distance * 3) : score;
     try {
-      const old = Number(localStorage.getItem(bestKey(worldType)) || 0);
-      if (points > old) localStorage.setItem(bestKey(worldType), String(points));
+      const old = readBest(worldType);
+      if (points > old) writeBest(worldType, points);
     } catch (e) {}
     overlayTitle.textContent = lives > 0 ? 'Run complete!' : 'Game over!';
-    overlayText.textContent = 'You scored ' + points + ' points. Best: ' + Math.max(points, Number(localStorage.getItem(bestKey(worldType)) || 0)) + '. Try another run.';
+    overlayText.textContent = 'You scored ' + points + ' points. Best: ' + Math.max(points, readBest(worldType)) + '. Try another run.';
     startButton.textContent = 'Play again';
     overlay.classList.remove('hidden');
     setHud();
@@ -269,7 +284,7 @@
         THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
         buildScene();
       } else resize();
-      const best = Number(localStorage.getItem(bestKey(type)) || 0);
+      const best = readBest(type);
       overlayTitle.textContent = 'Ready?';
       overlayText.textContent = ({
         obby:'Jump over pink barriers and dodge purple blocks. Three hearts. How far can you go?',
