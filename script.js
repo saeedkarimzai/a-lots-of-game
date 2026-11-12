@@ -276,6 +276,7 @@ function renderMemoryGame(startMarkup, endMarkup) {
 function renderGuessGame(startMarkup, endMarkup) {
   let target = Math.floor(Math.random() * 100) + 1;
   let triesLeft = 7;
+  let finished = false;
 
   const html = `
     ${startMarkup}
@@ -299,7 +300,9 @@ function renderGuessGame(startMarkup, endMarkup) {
     guessMessage.textContent = `${triesLeft} tries remaining`;
   };
 
-  document.getElementById('submitGuess').addEventListener('click', () => {
+  const submitGuess = document.getElementById('submitGuess');
+  submitGuess.addEventListener('click', () => {
+    if (finished) return;
     const entered = Number(guessInput.value);
     if (!Number.isFinite(entered) || entered < 1 || entered > 100) {
       guessMessage.textContent = 'Enter a valid number from 1 to 100.';
@@ -311,6 +314,9 @@ function renderGuessGame(startMarkup, endMarkup) {
     if (entered === target) {
       guessValue.textContent = '✓';
       guessMessage.textContent = `Perfect! You got it in ${7 - triesLeft} tries.`;
+      finished = true;
+      guessInput.disabled = true;
+      submitGuess.disabled = true;
       setBestScore(Math.max(100, 900 - (7 - triesLeft) * 110));
       return;
     }
@@ -318,6 +324,9 @@ function renderGuessGame(startMarkup, endMarkup) {
     guessValue.textContent = entered < target ? '↑' : '↓';
     if (triesLeft <= 0) {
       guessMessage.textContent = `Out of tries — the answer was ${target}.`;
+      finished = true;
+      guessInput.disabled = true;
+      submitGuess.disabled = true;
       guessValue.textContent = String(target);
       return;
     }
@@ -419,9 +428,24 @@ function renderTicTacToeGame(startMarkup, endMarkup) {
       .map((value, index) => (value === '' ? index : null))
       .filter((value) => value !== null);
 
-    if (!emptyIndexes.length) return;
+    if (!emptyIndexes.length || done) return;
 
-    const move = emptyIndexes[Math.floor(Math.random() * emptyIndexes.length)];
+    const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    let move = null;
+    for (const mark of ['O', 'X']) {
+      for (const line of lines) {
+        const marks = line.filter(index => board[index] === mark).length;
+        const empty = line.find(index => board[index] === '');
+        if (marks === 2 && empty !== undefined) { move = empty; break; }
+      }
+      if (move !== null) break;
+    }
+    if (move === null && board[4] === '') move = 4;
+    if (move === null) {
+      const corners = [0,2,6,8].filter(index => board[index] === '');
+      if (corners.length) move = corners[Math.floor(Math.random() * corners.length)];
+    }
+    if (move === null) move = emptyIndexes[Math.floor(Math.random() * emptyIndexes.length)];
     board[move] = 'O';
     currentPlayer = 'X';
     renderBoard();
