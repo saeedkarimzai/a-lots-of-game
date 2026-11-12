@@ -1,56 +1,20 @@
 (() => {
   'use strict';
-
-  const css = `
-    .worlds-3d{padding:42px 0 58px;border-top:1px solid rgba(255,255,255,.08)}
-    .worlds-intro{max-width:620px;margin:-10px 0 22px;color:#9a9bb5;font-size:13px;line-height:1.7}
-    .world-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .world-card{display:grid;grid-template-columns:.82fr 1.18fr;min-height:220px;overflow:hidden;border:1px solid rgba(195,202,255,.13);border-radius:15px;background:linear-gradient(145deg,#16182cdd,#101221dd)}
-    .world-art{position:relative;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 45%,#35336b,#19162d 70%)}
-    .world-art:before,.world-art:after{content:'';position:absolute;bottom:15%;width:180px;height:90px;transform:rotateX(58deg) rotateZ(-28deg);border:1px solid #68e4ed66;background:repeating-linear-gradient(90deg,transparent 0 28px,#68e4ed29 29px 30px),repeating-linear-gradient(0deg,transparent 0 28px,#68e4ed29 29px 30px)}
-    .world-art:after{bottom:42%;width:55px;height:55px;transform:rotate(45deg);background:linear-gradient(135deg,#ff73c8,#947aff);border:0;box-shadow:0 0 28px #ff73c866}
-    .world-art span{position:absolute;z-index:1;top:23%;font-size:38px;color:#c8f278;text-shadow:0 0 25px #c8f27888}
-    .world-art i{position:absolute;z-index:1;right:16%;top:32%;font-style:normal;color:#ffcf61;font-size:25px;text-shadow:0 0 20px #ffcf61}
-    .world-art b{position:absolute;left:15px;bottom:13px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#ffffffb8}
-    .coin-art{background:radial-gradient(circle at 50% 45%,#254d5c,#101c2a 72%)}
-    .coin-art:before{border-color:#c8f27877;background:repeating-linear-gradient(90deg,transparent 0 28px,#c8f27824 29px 30px),repeating-linear-gradient(0deg,transparent 0 28px,#c8f27824 29px 30px)}
-    .coin-art:after{border-radius:50%;background:linear-gradient(135deg,#fff1a1,#ffad41);box-shadow:0 0 30px #ffd76799}
-    .world-card-copy{padding:20px;align-self:center}.world-tag{font-size:9px;letter-spacing:.15em;font-weight:800;color:#68e4ed}.world-card-copy h3{margin:8px 0;font:700 20px 'Space Grotesk',sans-serif}.world-card-copy p{margin:0 0 16px;color:#9a9bb5;font-size:11px;line-height:1.6}.launch-world{font-size:11px}
-    .world-modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:14px;background:#050610dc;backdrop-filter:blur(8px)}
-    .world-panel{width:min(900px,100%);background:#101322;border:1px solid #ffffff24;border-radius:17px;padding:17px;box-shadow:0 25px 100px #000b}
-    .world-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.world-panel-title{font:700 20px 'Space Grotesk',sans-serif}.world-panel-sub{margin-top:4px;color:#9a9bb5;font-size:11px}.world-close{border:1px solid #ffffff22;border-radius:9px;background:#ffffff0b;color:white;width:36px;height:36px;font-size:22px;cursor:pointer}
-    .world-canvas-wrap{position:relative;overflow:hidden;border:1px solid #ffffff20;border-radius:12px;background:#12142b}.world-canvas{display:block;width:100%;height:min(55vh,460px);min-height:260px;touch-action:none}
-    .world-hud{position:absolute;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;pointer-events:none}.world-hud span{padding:7px 10px;border:1px solid #ffffff23;border-radius:8px;background:#101322c9;font-size:11px;font-weight:800;letter-spacing:.06em}
-    .world-overlay{position:absolute;inset:0;display:grid;place-items:center;background:#090b18a8;text-align:center;padding:20px}.world-overlay.hidden{display:none}.world-overlay-box{max-width:420px;padding:22px;border:1px solid #ffffff24;border-radius:14px;background:#111426ed}.world-overlay-box h3{margin:0 0 8px;font:700 25px 'Space Grotesk',sans-serif}.world-overlay-box p{color:#c0c1d5;font-size:12px;line-height:1.6}.world-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;color:#9a9bb5;font-size:11px}.world-touch{display:flex;gap:7px}.world-touch button{width:44px;height:38px;border:1px solid #ffffff22;border-radius:9px;background:#ffffff0b;color:white;font-size:18px;touch-action:none}.world-start{padding:11px 17px;border:0;border-radius:9px;background:linear-gradient(110deg,#68e4ed,#ff73c8);color:#11121e;font-weight:800;cursor:pointer}
-    @media(max-width:680px){.world-card-grid{grid-template-columns:1fr}.world-card{min-height:195px;grid-template-columns:.72fr 1.28fr}.world-card-copy{padding:14px}.world-card-copy h3{font-size:17px}.world-control-row{align-items:flex-start;flex-direction:column}.world-canvas{height:48vh;min-height:250px}}
-  `;
-
-  const style = document.createElement('style');
-  style.textContent = css;
-  document.head.append(style);
-
   const modal = document.createElement('div');
   modal.className = 'world-modal hidden';
   modal.id = 'worldModal';
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
-  modal.innerHTML = `
-    <section class="world-panel" aria-labelledby="worldGameTitle">
-      <div class="world-panel-head">
-        <div><div class="kicker">ORIGINAL BLOCK-STYLE 3D ARCADE</div><div class="world-panel-title" id="worldGameTitle">Blocky World</div><div class="world-panel-sub">Move: ← → or A/D · Jump: Space / ↑ · Mobile: use buttons</div></div>
-        <button class="world-close" aria-label="Close world">×</button>
-      </div>
-      <div class="world-canvas-wrap">
-        <canvas class="world-canvas" aria-label="Playable perspective 3D-style arcade game"></canvas>
-        <div class="world-hud"><span id="worldScore">SCORE 0</span><span id="worldLives">♥ ♥ ♥</span></div>
-        <div class="world-overlay"><div class="world-overlay-box"><h3 id="worldOverlayTitle">Ready?</h3><p id="worldOverlayText">Dodge blocks, jump gaps, and collect shiny coins. The course speeds up as you play.</p><button class="world-start">Start run</button></div></div>
-      </div>
-      <div class="world-control-row"><span>Original blocky arcade worlds — inspired by the look of user-made platform games, not copied from Roblox.</span><div class="world-touch"><button data-control="left" aria-label="Move left">←</button><button data-control="jump" aria-label="Jump">↑</button><button data-control="right" aria-label="Move right">→</button></div></div>
-    </section>`;
+  modal.innerHTML = [
+    '<section class="world-panel" aria-labelledby="worldGameTitle">',
+    '<div class="world-panel-head"><div><div class="kicker">REAL THREE.JS WEBGL ARCADE</div><div class="world-panel-title" id="worldGameTitle">3D World</div><div class="world-panel-sub">Move: ← → or A/D · Jump: Space / ↑ · Touch buttons on mobile</div></div><button class="world-close" aria-label="Close world">×</button></div>',
+    '<div class="world-canvas-wrap"><canvas class="world-canvas" aria-label="Interactive 3D arcade game"></canvas><div class="world-hud"><span id="worldScore">SCORE 0</span><span id="worldLives">♥ ♥ ♥</span></div><div class="world-overlay"><div class="world-overlay-box"><h3 id="worldOverlayTitle">Ready?</h3><p id="worldOverlayText">Run, jump, dodge obstacles, and collect items in a real 3D world.</p><button class="world-start">Start game</button></div></div></div>',
+    '<div class="world-control-row"><span>Three.js WebGL · Original low-poly worlds · Best scores save on this device</span><div class="world-touch"><button data-control="left" aria-label="Move left">←</button><button data-control="jump" aria-label="Jump">↑</button><button data-control="right" aria-label="Move right">→</button></div></div>',
+    '</section>'
+  ].join('');
   document.body.append(modal);
 
   const canvas = modal.querySelector('canvas');
-  const ctx = canvas.getContext('2d');
   const scoreLabel = modal.querySelector('#worldScore');
   const livesLabel = modal.querySelector('#worldLives');
   const overlay = modal.querySelector('.world-overlay');
@@ -58,348 +22,292 @@
   const overlayText = modal.querySelector('#worldOverlayText');
   const startButton = modal.querySelector('.world-start');
   const title = modal.querySelector('#worldGameTitle');
+  let THREE = null, renderer = null, scene = null, camera = null, clock = null;
+  let player = null, obstacleGroup = null, running = false, raf = 0;
+  let worldType = 'obby', score = 0, coins = 0, lives = 3, lane = 1;
+  let jumpY = 0, jumpVelocity = 0, distance = 0, spawnClock = 0;
+  const laneX = [-2.4, 0, 2.4];
+  const bestKey = type => 'a-lots-3d-best-' + type;
 
-  let worldType = 'obby';
-  let raf = 0;
-  let lastTime = 0;
-  let spawnClock = 0;
-  let score = 0;
-  let coins = 0;
-  let lives = 3;
-  let lane = 0;
-  let jumpHeight = 0;
-  let jumpVelocity = 0;
-  let running = false;
-  let ended = false;
-  let objects = [];
-  let distance = 0;
-  let width = 0;
-  let height = 0;
-  let pixelRatio = 1;
-
-  const lanes = [-2.4, 0, 2.4];
-  const randomLane = () => Math.floor(Math.random() * 3);
-
-  function resizeCanvas() {
+  function mat(color, roughness, metalness) {
+    return new THREE.MeshStandardMaterial({ color: color, roughness: roughness === undefined ? 0.7 : roughness, metalness: metalness || 0.05 });
+  }
+  function box(parent, x, y, z, w, h, d, color) {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(color));
+    mesh.position.set(x, y, z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    parent.add(mesh);
+    return mesh;
+  }
+  function buildPlayer() {
+    player = new THREE.Group();
+    box(player, 0, 0.67, 0, 0.76, 0.9, 0.54, '#5ce1e6');
+    box(player, 0, 1.36, 0, 0.58, 0.58, 0.58, '#ffd5b8');
+    box(player, 0, 1.42, 0.3, 0.38, 0.1, 0.04, '#252b48');
+    box(player, -0.48, 0.72, 0, 0.2, 0.66, 0.22, '#9b82ff');
+    box(player, 0.48, 0.72, 0, 0.2, 0.66, 0.22, '#9b82ff');
+    box(player, -0.19, 0.22, 0, 0.25, 0.44, 0.28, '#30385d');
+    box(player, 0.19, 0.22, 0, 0.25, 0.44, 0.28, '#30385d');
+    player.position.set(0, 0, 4);
+    scene.add(player);
+  }
+  function buildScene() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color('#11152b');
+    scene.fog = new THREE.Fog('#11152b', 22, 82);
+    camera = new THREE.PerspectiveCamera(64, 1, 0.1, 120);
+    camera.position.set(0, 5.2, 12.5);
+    camera.lookAt(0, 1, -10);
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    scene.add(new THREE.HemisphereLight('#b8d6ff', '#27203f', 2));
+    const sun = new THREE.DirectionalLight('#fff0dc', 2.4);
+    sun.position.set(-5, 13, 8);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    scene.add(sun);
+    const ground = new THREE.Mesh(new THREE.BoxGeometry(9, 0.4, 110), mat('#171d38'));
+    ground.position.set(0, -0.35, -38);
+    ground.receiveShadow = true;
+    scene.add(ground);
+    const grid = new THREE.GridHelper(100, 50, '#69dce9', '#30385b');
+    grid.position.set(0, -0.13, -38);
+    scene.add(grid);
+    for (let i = 0; i < 34; i++) {
+      const x = (i % 2 ? 1 : -1) * (6 + Math.random() * 13);
+      const z = -Math.random() * 85;
+      const h = 2 + Math.random() * 8;
+      const tower = box(scene, x, h / 2 - 0.2, z, 1 + Math.random() * 2, h, 1 + Math.random() * 2, ['#22264b','#28375c','#3a2859','#1c4853'][i % 4]);
+      tower.material.emissive = new THREE.Color(tower.material.color);
+      tower.material.emissiveIntensity = 0.12;
+    }
+    const orb = new THREE.Mesh(new THREE.SphereGeometry(2.6, 20, 20), new THREE.MeshBasicMaterial({ color: '#8b76ff' }));
+    orb.position.set(-10, 12, -48);
+    scene.add(orb);
+    obstacleGroup = new THREE.Group();
+    scene.add(obstacleGroup);
+    buildPlayer();
+    clock = new THREE.Clock();
+    resize();
+  }
+  function resize() {
+    if (!renderer || !camera) return;
     const rect = canvas.getBoundingClientRect();
-    pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-    width = Math.max(1, rect.width);
-    height = Math.max(1, rect.height);
-    canvas.width = Math.floor(width * pixelRatio);
-    canvas.height = Math.floor(height * pixelRatio);
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    drawScene();
+    const w = Math.max(1, rect.width), h = Math.max(1, rect.height);
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
   }
-
-  function project(x, y, z) {
-    const focal = Math.min(width, height) * 0.95;
-    const scale = focal / (z + 5.2);
-    const horizon = height * 0.40;
-    return {
-      x: width * 0.5 + x * scale,
-      y: horizon + 1.45 * scale - y * scale,
-      scale
-    };
-  }
-
-  function polygon(points, fill, stroke) {
-    ctx.beginPath();
-    points.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-    if (stroke) {
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-  }
-
-  function drawCube(x, z, cubeWidth, cubeHeight, color, isPlayer = false) {
-    const y = isPlayer ? jumpHeight : 0;
-    const base = [
-      project(x - cubeWidth / 2, y, z),
-      project(x + cubeWidth / 2, y, z),
-      project(x + cubeWidth / 2, y, z + cubeWidth * 0.58),
-      project(x - cubeWidth / 2, y, z + cubeWidth * 0.58)
-    ];
-    const top = [
-      project(x - cubeWidth / 2, y + cubeHeight, z),
-      project(x + cubeWidth / 2, y + cubeHeight, z),
-      project(x + cubeWidth / 2, y + cubeHeight, z + cubeWidth * 0.58),
-      project(x - cubeWidth / 2, y + cubeHeight, z + cubeWidth * 0.58)
-    ];
-
-    polygon([base[1], base[2], top[2], top[1]], shade(color, -28), '#10132266');
-    polygon([base[0], base[1], top[1], top[0]], color, '#ffffff28');
-    polygon([top[0], top[1], top[2], top[3]], shade(color, 24), '#ffffff44');
-
-    if (isPlayer) {
-      const headCenter = project(x, y + cubeHeight + 0.32, z);
-      const radius = Math.max(5, headCenter.scale * 0.23);
-      ctx.fillStyle = '#ffd8bb';
-      ctx.fillRect(headCenter.x - radius, headCenter.y - radius, radius * 2, radius * 2);
-      ctx.fillStyle = '#20223a';
-      ctx.fillRect(headCenter.x - radius * 0.5, headCenter.y - radius * 0.12, radius * 0.18, radius * 0.16);
-      ctx.fillRect(headCenter.x + radius * 0.28, headCenter.y - radius * 0.12, radius * 0.18, radius * 0.16);
-    }
-  }
-
-  function shade(hex, amount) {
-    const value = hex.replace('#', '');
-    const number = parseInt(value, 16);
-    const r = Math.max(0, Math.min(255, (number >> 16) + amount));
-    const g = Math.max(0, Math.min(255, ((number >> 8) & 255) + amount));
-    const b = Math.max(0, Math.min(255, (number & 255) + amount));
-    return `rgb(${r},${g},${b})`;
-  }
-
-  function drawCoin(x, z) {
-    const point = project(x, 0.8, z);
-    const radius = Math.max(3, point.scale * 0.22);
-    ctx.save();
-    ctx.translate(point.x, point.y);
-    ctx.scale(0.72, 1);
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffd767';
-    ctx.shadowColor = '#ffd767';
-    ctx.shadowBlur = 14;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.strokeStyle = '#fff3b4';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawScene() {
-    if (!ctx || !width || !height) return;
-    const sky = ctx.createLinearGradient(0, 0, 0, height);
-    sky.addColorStop(0, '#13142e');
-    sky.addColorStop(0.52, '#29244a');
-    sky.addColorStop(1, '#101629');
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, width, height);
-
-    for (let i = 0; i < 32; i++) {
-      const x = (i * 97 + 23) % width;
-      const y = (i * 41 + 17) % Math.max(1, height * 0.42);
-      ctx.fillStyle = i % 4 === 0 ? '#ff8dd7' : '#c4f6ff';
-      ctx.globalAlpha = 0.25 + ((i * 13) % 70) / 100;
-      ctx.fillRect(x, y, 2, 2);
-    }
-    ctx.globalAlpha = 1;
-
-    const floorLeftFar = project(-4.4, 0, 42);
-    const floorRightFar = project(4.4, 0, 42);
-    const floorLeftNear = project(-4.4, 0, 0);
-    const floorRightNear = project(4.4, 0, 0);
-    polygon([floorLeftFar, floorRightFar, floorRightNear, floorLeftNear], '#171a32', '#68e4ed44');
-
-    for (let laneLine = -3; laneLine <= 3; laneLine += 1.5) {
-      const far = project(laneLine, 0, 42);
-      const near = project(laneLine, 0, 0);
-      ctx.beginPath();
-      ctx.moveTo(far.x, far.y);
-      ctx.lineTo(near.x, near.y);
-      ctx.strokeStyle = laneLine === 0 ? '#ff73c855' : '#68e4ed30';
-      ctx.lineWidth = laneLine === 0 ? 2 : 1;
-      ctx.stroke();
-    }
-
-    const offset = distance % 4;
-    for (let z = 4 - offset; z < 40; z += 4) {
-      const left = project(-4.4, 0, z);
-      const right = project(4.4, 0, z);
-      ctx.beginPath();
-      ctx.moveTo(left.x, left.y);
-      ctx.lineTo(right.x, right.y);
-      ctx.strokeStyle = '#ffffff10';
-      ctx.stroke();
-    }
-
-    objects.slice().sort((a, b) => b.z - a.z).forEach((object) => {
-      if (object.kind === 'coin') drawCoin(lanes[object.lane], object.z);
-      else drawCube(lanes[object.lane], object.z, object.kind === 'barrier' ? 1.5 : 1.15, object.kind === 'barrier' ? 1.35 : 0.8, object.kind === 'barrier' ? '#fa5d9d' : '#9a7cff');
-    });
-
-    drawCube(lanes[lane], 0.5, 0.95, 1.05, '#68e4ed', true);
-
-    const vignette = ctx.createRadialGradient(width / 2, height / 2, height * 0.2, width / 2, height / 2, width * 0.72);
-    vignette.addColorStop(0, 'transparent');
-    vignette.addColorStop(1, '#05061188');
-    ctx.fillStyle = vignette;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function updateHud() {
-    const shownScore = worldType === 'coins' ? coins * 100 + Math.floor(distance * 5) : score;
-    scoreLabel.textContent = `SCORE ${shownScore}`;
-    livesLabel.textContent = `${'♥ '.repeat(Math.max(0, lives))}${'♡ '.repeat(3 - Math.max(0, lives))}`.trim();
-  }
-
   function spawnObject() {
-    const laneIndex = randomLane();
-    if (worldType === 'coins') {
+    const x = laneX[Math.floor(Math.random() * 3)];
+    const z = -43;
+    if (worldType === 'coins' || worldType === 'crystals') {
       if (Math.random() < 0.72) {
-        objects.push({ kind: 'coin', lane: laneIndex, z: 35 });
+        const color = worldType === 'coins' ? '#ffd15c' : '#52f2d2';
+        const gem = new THREE.Mesh(new THREE.IcosahedronGeometry(0.52, 1), mat(color, 0.22, 0.55));
+        gem.position.set(x, 1.15, z);
+        gem.userData.kind = 'pickup';
+        obstacleGroup.add(gem);
       } else {
-        objects.push({ kind: 'block', lane: laneIndex, z: 35 });
+        const hazard = box(obstacleGroup, x, 0.8, z, 1.15, 1.6, 1.1, '#9a7cff');
+        hazard.userData.kind = 'hazard';
       }
-      if (Math.random() < 0.42) {
-        objects.push({ kind: 'coin', lane: randomLane(), z: 39 });
+    } else if (worldType === 'sky') {
+      const platform = box(obstacleGroup, x, -0.05, z, 2.0, 0.32, 2.4, Math.random() < 0.5 ? '#68e4ed' : '#9b82ff');
+      platform.userData.kind = 'platform';
+      if (Math.random() < 0.55) {
+        const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(0.42), mat('#ffd15c', 0.25, 0.4));
+        crystal.position.set(x, 0.85, z);
+        crystal.userData.kind = 'pickup';
+        obstacleGroup.add(crystal);
       }
     } else {
-      objects.push({ kind: Math.random() < 0.42 ? 'barrier' : 'block', lane: laneIndex, z: 35 });
-      if (Math.random() < 0.18) {
-        const otherLane = (laneIndex + 1 + Math.floor(Math.random() * 2)) % 3;
-        objects.push({ kind: 'block', lane: otherLane, z: 42 });
-      }
+      const tall = Math.random() < 0.42;
+      const hazard = box(obstacleGroup, x, tall ? 1.1 : 0.65, z, 1.25, tall ? 2.2 : 1.3, 1.25, tall ? '#ff6da9' : '#8b79ff');
+      hazard.userData.kind = 'hazard';
     }
   }
-
-  function endRun() {
+  function disposeObject(obj) {
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.material) {
+      if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+      else obj.material.dispose();
+    }
+  }
+  function clearObjects() {
+    if (!obstacleGroup) return;
+    while (obstacleGroup.children.length) {
+      const obj = obstacleGroup.children[0];
+      obstacleGroup.remove(obj);
+      disposeObject(obj);
+    }
+  }
+  function setHud() {
+    const points = (worldType === 'coins' || worldType === 'crystals' || worldType === 'sky') ? coins * 100 + Math.floor(distance * 3) : score;
+    scoreLabel.textContent = 'SCORE ' + points;
+    livesLabel.textContent = '♥ '.repeat(Math.max(0, lives)) + '♡ '.repeat(3 - Math.max(0, lives));
+  }
+  function finish() {
     running = false;
-    ended = true;
-    cancelAnimationFrame(raf);
-    overlayTitle.textContent = lives ? 'Run complete!' : 'Ouch, game over!';
-    overlayText.textContent = worldType === 'coins'
-      ? `You collected ${coins} coins and scored ${coins * 100 + Math.floor(distance * 5)}. Try again and beat your best!`
-      : `You made it ${Math.floor(distance)} meters with ${score} points. Jump and switch lanes to dodge the blocks.`;
+    const points = (worldType === 'coins' || worldType === 'crystals' || worldType === 'sky') ? coins * 100 + Math.floor(distance * 3) : score;
+    try {
+      const old = Number(localStorage.getItem(bestKey(worldType)) || 0);
+      if (points > old) localStorage.setItem(bestKey(worldType), String(points));
+    } catch (e) {}
+    overlayTitle.textContent = lives > 0 ? 'Run complete!' : 'Game over!';
+    overlayText.textContent = 'You scored ' + points + ' points. Best: ' + Math.max(points, Number(localStorage.getItem(bestKey(worldType)) || 0)) + '. Try another run.';
     startButton.textContent = 'Play again';
     overlay.classList.remove('hidden');
+    setHud();
   }
-
-  function tick(now) {
-    if (!running) return;
-    const dt = Math.min(0.04, Math.max(0, (now - lastTime) / 1000));
-    lastTime = now;
-    const speed = 10 + Math.min(distance * 0.025, 8);
+  function update(dt) {
+    const speed = 13 + Math.min(distance * 0.018, 9);
     distance += speed * dt;
     spawnClock += dt;
-    const spawnEvery = Math.max(0.62, 1.18 - distance * 0.0015);
-    if (spawnClock >= spawnEvery) {
+    if (spawnClock > Math.max(0.62, 1.18 - distance * 0.0012)) {
       spawnClock = 0;
       spawnObject();
     }
-
-    if (jumpHeight > 0 || jumpVelocity > 0) {
-      jumpHeight += jumpVelocity * dt;
-      jumpVelocity -= 18 * dt;
-      if (jumpHeight <= 0) {
-        jumpHeight = 0;
-        jumpVelocity = 0;
-      }
+    if (jumpY > 0 || jumpVelocity > 0) {
+      jumpY += jumpVelocity * dt;
+      jumpVelocity -= 22 * dt;
+      if (jumpY <= 0) { jumpY = 0; jumpVelocity = 0; }
     }
-
-    objects.forEach((object) => { object.z -= speed * dt; });
-    objects = objects.filter((object) => {
-      if (object.z < -1) return false;
-      if (object.z <= 1.1 && object.z > -0.5 && object.lane === lane) {
-        if (object.kind === 'coin') {
-          coins += 1;
-          score += 100;
-          return false;
-        }
-        if (jumpHeight < (object.kind === 'barrier' ? 0.8 : 0.65)) {
+    player.position.x += (laneX[lane] - player.position.x) * Math.min(1, dt * 12);
+    player.position.y = jumpY;
+    player.rotation.z = (laneX[lane] - player.position.x) * -0.06;
+    const children = obstacleGroup.children.slice();
+    for (const obj of children) {
+      obj.position.z += speed * dt;
+      if (obj.position.z > 7) {
+        obstacleGroup.remove(obj);
+        disposeObject(obj);
+        continue;
+      }
+      const sameLane = Math.abs(obj.position.x - player.position.x) < 0.95;
+      const close = obj.position.z > 2.7 && obj.position.z < 5.5 && sameLane;
+      if (!close) continue;
+      if (obj.userData.kind === 'pickup') {
+        coins += 1;
+        score += 100;
+        obstacleGroup.remove(obj);
+        disposeObject(obj);
+      } else if (obj.userData.kind === 'hazard') {
+        if (jumpY < 1.15) {
           lives -= 1;
           score = Math.max(0, score - 50);
-          if (lives <= 0) {
-            updateHud();
-            endRun();
-          }
+          obstacleGroup.remove(obj);
+          disposeObject(obj);
+          if (lives <= 0) { setHud(); finish(); return; }
         } else {
-          score += 25;
+          score += 20;
+          obstacleGroup.remove(obj);
+          disposeObject(obj);
         }
-        return false;
+      } else if (obj.userData.kind === 'platform' && jumpY < 0.2) {
+        lives -= 1;
+        obstacleGroup.remove(obj);
+        disposeObject(obj);
+        if (lives <= 0) { setHud(); finish(); return; }
       }
-      return true;
-    });
-
+    }
     score += Math.floor(dt * 8);
-    updateHud();
-    drawScene();
-    raf = requestAnimationFrame(tick);
+    setHud();
   }
-
+  function loop() {
+    if (!running) return;
+    const dt = Math.min(clock.getDelta(), 0.04);
+    update(dt);
+    renderer.render(scene, camera);
+    if (running) raf = requestAnimationFrame(loop);
+  }
   function startRun() {
+    if (!THREE || !renderer) return;
     cancelAnimationFrame(raf);
-    score = 0;
-    coins = 0;
-    lives = 3;
-    lane = 1;
-    jumpHeight = 0;
-    jumpVelocity = 0;
-    spawnClock = 0;
-    distance = 0;
-    objects = [];
-    ended = false;
+    clearObjects();
+    score = 0; coins = 0; lives = 3; lane = 1; jumpY = 0; jumpVelocity = 0; distance = 0; spawnClock = 0;
+    player.position.set(0, 0, 4);
+    player.rotation.set(0, 0, 0);
     running = true;
-    lastTime = performance.now();
+    clock.start();
     overlay.classList.add('hidden');
-    updateHud();
-    raf = requestAnimationFrame(tick);
+    setHud();
+    raf = requestAnimationFrame(loop);
   }
-
   function move(direction) {
     if (!running) return;
     if (direction === 'left') lane = Math.max(0, lane - 1);
     if (direction === 'right') lane = Math.min(2, lane + 1);
-    if (direction === 'jump' && jumpHeight === 0) jumpVelocity = 8.8;
-    drawScene();
+    if (direction === 'jump' && jumpY === 0 && jumpVelocity === 0) jumpVelocity = 9.2;
   }
-
   function onKeyDown(event) {
     if (modal.classList.contains('hidden')) return;
-    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', ' ', 'a', 'A', 'd', 'D'].includes(event.key)) event.preventDefault();
-    if (event.repeat && ['ArrowLeft', 'ArrowRight', 'ArrowUp', ' ', 'a', 'A', 'd', 'D'].includes(event.key)) return;
-    if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') move('left');
-    if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') move('right');
-    if (event.key === 'ArrowUp' || event.key === ' ') move('jump');
+    const key = event.key.toLowerCase();
+    if (['arrowleft','arrowright','arrowup',' ','a','d'].includes(key)) event.preventDefault();
+    if (event.repeat && ['arrowleft','arrowright','arrowup',' ','a','d'].includes(key)) return;
+    if (key === 'arrowleft' || key === 'a') move('left');
+    if (key === 'arrowright' || key === 'd') move('right');
+    if (key === 'arrowup' || key === ' ') move('jump');
   }
-
+  async function openWorld(type) {
+    worldType = type;
+    title.textContent = ({obby:'Blocky Obby Rush',coins:'Blocky Coin Dash',sky:'Sky Steps 3D',crystals:'Crystal Sprint 3D'})[type];
+    overlayTitle.textContent = 'Loading 3D world…';
+    overlayText.textContent = 'Starting the Three.js WebGL renderer.';
+    startButton.disabled = true;
+    startButton.textContent = 'Loading…';
+    overlay.classList.remove('hidden');
+    modal.classList.remove('hidden');
+    try {
+      if (!THREE) {
+        THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+        buildScene();
+      } else resize();
+      const best = Number(localStorage.getItem(bestKey(type)) || 0);
+      overlayTitle.textContent = 'Ready?';
+      overlayText.textContent = ({
+        obby:'Jump over pink barriers and dodge purple blocks. Three hearts. How far can you go?',
+        coins:'Collect gold coins, avoid blocks, and build the biggest score.',
+        sky:'Jump over the floating platforms and avoid falling gaps. Keep moving!',
+        crystals:'Grab turquoise crystals and weave around purple hazards.'
+      })[type] + ' Best: ' + best;
+      startButton.textContent = 'Start game';
+      startButton.disabled = false;
+      resize();
+      renderer.render(scene, camera);
+    } catch (error) {
+      console.error('3D engine failed to load:', error);
+      overlayTitle.textContent = '3D could not start';
+      overlayText.textContent = 'Three.js could not load. Check internet access and WebGL support, then try again.';
+      startButton.textContent = 'Try again';
+      startButton.disabled = false;
+    }
+  }
   function closeWorld() {
     running = false;
     cancelAnimationFrame(raf);
     modal.classList.add('hidden');
   }
-
-  function openWorld(type) {
-    worldType = type;
-    title.textContent = type === 'coins' ? 'Blocky Coin Dash' : 'Blocky Obby Rush';
-    overlayTitle.textContent = 'Ready?';
-    overlayText.textContent = type === 'coins'
-      ? 'Collect the gold coins and avoid purple blocks. Grab as many as you can!'
-      : 'Dodge chunky barriers, switch lanes, and jump over blocks. You have three hearts!';
-    startButton.textContent = 'Start run';
-    overlay.classList.remove('hidden');
-    modal.classList.remove('hidden');
-    resizeCanvas();
-  }
-
-  document.querySelectorAll('.launch-world').forEach((button) => {
-    button.addEventListener('click', () => openWorld(button.dataset.world));
-  });
+  document.querySelectorAll('.launch-world').forEach(button => button.addEventListener('click', () => openWorld(button.dataset.world)));
   startButton.addEventListener('click', startRun);
   modal.querySelector('.world-close').addEventListener('click', closeWorld);
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) closeWorld();
-  });
+  modal.addEventListener('click', event => { if (event.target === modal) closeWorld(); });
   window.addEventListener('keydown', onKeyDown);
-  window.addEventListener('resize', () => {
-    if (!modal.classList.contains('hidden')) resizeCanvas();
-  });
-  modal.querySelectorAll('[data-control]').forEach((button) => {
-    button.addEventListener('pointerdown', (event) => {
-      event.preventDefault();
-      move(button.dataset.control);
-    });
-  });
-  modal.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeWorld();
-  });
+  window.addEventListener('resize', resize);
+  modal.querySelectorAll('[data-control]').forEach(button => button.addEventListener('pointerdown', event => {
+    event.preventDefault();
+    move(button.dataset.control);
+  }));
+  new MutationObserver(() => {
+    if (modal.classList.contains('hidden')) {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+  }).observe(modal, { attributes: true, attributeFilter: ['class'] });
 })();
