@@ -164,7 +164,7 @@
     }
   }
   function setHud() {
-    const points = (worldType === 'coins' || worldType === 'crystals' || worldType === 'sky') ? coins * 100 + Math.floor(distance * 3) : score;
+    const points = (worldType === 'coins' || worldType === 'crystals' || worldType === 'sky') ? coins * 100 + Math.floor(distance * 3) : Math.floor(score);
     scoreLabel.textContent = 'SCORE ' + points;
     livesLabel.textContent = '♥ '.repeat(Math.max(0, lives)) + '♡ '.repeat(3 - Math.max(0, lives));
   }
@@ -232,7 +232,7 @@
         if (lives <= 0) { setHud(); finish(); return; }
       }
     }
-    score += Math.floor(dt * 8);
+    score += dt * 8;
     setHud();
   }
   function loop() {
