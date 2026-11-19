@@ -61,7 +61,10 @@ let best = getStoredNumber(STORAGE_KEYS.best);
 function getStoredList(key) {
   try {
     const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : [];
+    const parsed = value ? JSON.parse(value) : [];
+    return Array.isArray(parsed)
+      ? parsed.map(Number).filter((id) => Number.isSafeInteger(id) && id > 0)
+      : [];
   } catch {
     return [];
   }
@@ -432,7 +435,7 @@ function renderTicTacToeGame(startMarkup, endMarkup) {
     cells.forEach((cell) => {
       const index = Number(cell.dataset.cell);
       cell.textContent = board[index];
-      cell.disabled = !!board[index] || done;
+      cell.disabled = !!board[index] || done || currentPlayer !== 'X';
     });
   };
 
@@ -470,7 +473,7 @@ function renderTicTacToeGame(startMarkup, endMarkup) {
 
   cells.forEach((cell) => {
     cell.addEventListener('click', () => {
-      if (done) return;
+      if (done || currentPlayer !== 'X') return;
       const index = Number(cell.dataset.cell);
       if (board[index]) return;
 
@@ -484,6 +487,7 @@ function renderTicTacToeGame(startMarkup, endMarkup) {
       }
 
       currentPlayer = 'O';
+      renderBoard();
       tttMessage.textContent = 'Bot is thinking...';
       activeTimeout = setTimeout(botMove, 420);
     });
