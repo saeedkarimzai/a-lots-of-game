@@ -19,7 +19,7 @@ jobs:
       - name: Serve repository
         run: |
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/repo-server.log 2>&1 &
-      - name: Load main browser app in Chromium
+      - name: Check arcade catalog and launch games in Chromium
         run: |
           node <<'NODE'
           const { chromium } = require('playwright');
@@ -28,10 +28,49 @@ jobs:
             const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
             const errors = [];
             page.on('pageerror', error => errors.push(error.message));
+            await page.addInitScript(() => localStorage.setItem('arcade-favorites', JSON.stringify({ invalid: true })));
             await page.goto('http://127.0.0.1:8000/', { waitUntil: 'domcontentloaded' });
-            await page.waitForTimeout(3000);
-            if (errors.length) throw new Error(errors.join('\n'));
+
+            await page.locator('#grid .game-card').first().waitFor();
+            const cards = await page.locator('#grid .game-card').count();
+            if (cards !== 300) throw new Error(`Expected 300 catalog cards on first load, found ${cards}.`);
+
+            const ids = await page.locator('#grid [data-play]').evaluateAll(nodes => nodes.map(node => Number(node.dataset.play)));
+            if (new Set(ids).size !== 300 || Math.min(...ids) !== 1 || Math.max(...ids) !== 300) {
+              throw new Error('Catalog IDs are not a unique continuous range from 1 to 300.');
+            }
+
+            for (const id of [1, 2, 3, 4, 5, 6, 299, 300]) {
+              const launch = page.locator(`#grid [data-play="${id}"]`);
+              if (await launch.count() !== 1) throw new Error(`Game ${id} does not have exactly one launch button.`);
+              await launch.click();
+              await page.locator('#modal:not(.hidden) .game-content').waitFor({ state: 'visible' });
+              await page.locator('#close').click();
+              await page.locator('#modal.hidden').waitFor({ state: 'visible' });
+            }
+
+            const worldIds = await page.locator('.launch-world').evaluateAll(nodes => nodes.map(node => node.dataset.world).sort());
+            if (worldIds.join(',') !== 'coins,crystals,obby,sky') throw new Error('The four 3D world launch routes are missing or mismatched.');
+
+            for (const world of ['obby', 'coins', 'sky', 'crystals']) {
+              await page.locator(`.launch-world[data-world="${world}"]`).click();
+              await page.locator('#worldModal:not(.hidden)').waitFor({ state: 'visible' });
+              await page.waitForFunction(() => {
+                const title = document.querySelector('#worldOverlayTitle')?.textContent;
+                return title === 'Ready?' || title === '3D could not start';
+              }, { timeout: 15000 });
+              const state = await page.locator('#worldOverlayTitle').textContent();
+              if (state !== 'Ready?') throw new Error(`${world} failed to initialize its Three.js world.`);
+              await page.locator('#worldModal .world-start').click();
+              await page.waitForTimeout(500);
+              const score = await page.locator('#worldScore').textContent();
+              if (!score || score === 'SCORE 0') throw new Error(`${world} started but its game loop did not update the HUD.`);
+              await page.locator('#worldModal .world-close').click();
+              await page.locator('#worldModal.hidden').waitFor({ state: 'hidden' });
+            }
+
+            if (errors.length) throw new Error(errors.join('\\n'));
             await browser.close();
-            console.log('Passed: main browser app loaded without uncaught JavaScript errors.');
+            console.log('Passed: 300 catalog entries, 8 2D launch paths, 4 3D worlds, and no uncaught browser JavaScript errors.');
           })().catch(error => { console.error(error); process.exit(1); });
           NODE
