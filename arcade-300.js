@@ -22,5 +22,7 @@
     });
   }
 
-
+  // script.js renders the first 200 entries before this file loads.
+  // Refresh now so the 100 appended games appear immediately on first page load.
+  renderGames();
 })();
