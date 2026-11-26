@@ -46,7 +46,7 @@ jobs:
               await launch.click();
               await page.locator('#modal:not(.hidden) .game-content').waitFor({ state: 'visible' });
               await page.locator('#close').click();
-              await page.locator('#modal.hidden').waitFor({ state: 'visible' });
+              await page.locator('#modal').waitFor({ state: 'hidden' });
             }
 
             const worldIds = await page.locator('.launch-world').evaluateAll(nodes => nodes.map(node => node.dataset.world).sort());
@@ -58,7 +58,7 @@ jobs:
               await page.waitForFunction(() => {
                 const title = document.querySelector('#worldOverlayTitle')?.textContent;
                 return title === 'Ready?' || title === '3D could not start';
-              }, { timeout: 15000 });
+              }, null, { timeout: 15000 });
               const state = await page.locator('#worldOverlayTitle').textContent();
               if (state !== 'Ready?') throw new Error(`${world} failed to initialize its Three.js world.`);
               await page.locator('#worldModal .world-start').click();
